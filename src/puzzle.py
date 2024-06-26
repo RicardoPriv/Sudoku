@@ -1,7 +1,7 @@
 import random
 import multiprocessing
 from multiprocessing.pool import Pool
-from validator import SudokuValidator
+from src.validator import SudokuValidator
 
 x = 0
 
@@ -25,6 +25,13 @@ class Solver:
             return True  # Puzzle solved
 
         return solve_recursive()
+    
+    def solve_puzzle(self, puzzle: list) -> list:
+        solved_puzzle = puzzle[:]  # Create a copy of the puzzle
+        if self.backtrack_solver(solved_puzzle):
+            return solved_puzzle
+        else:
+            return None  # Return None if puzzle cannot be solved
 
 class Generator:
     def __init__(self):
@@ -54,21 +61,25 @@ class Generator:
                         puzzle[i] = 0
                 return puzzle  # Return the solvable puzzle
             
-    def generate_puzzle(self, begin_numbers: int) -> list:
+    def generate_puzzle(self, begin_numbers: int, puzzle_count: int) -> list:
         gen = Generator()
         pool = multiprocessing.Pool()
         solving = []
+        solved = []
 
         while True:
             p = pool.apply_async(gen.attempt_gen_puzzle, (begin_numbers,))
             solving.append(p)
 
-            for process in solving:
+            for i, process in enumerate(solving):
                 if process.ready():
-                    solved_puzzle = process.get()
-                    pool.terminate()
-                    pool.join()
-                    return solved_puzzle
+                    solved.append(process.get())
+                    solving.pop(i)
+                    puzzle_count -= 1
+                    if puzzle_count == 0:
+                        pool.terminate()
+                        pool.join()
+                        return solved
     
 class Auxil:
     def print_puzzle(self, puzzle: list):
@@ -80,3 +91,26 @@ class Auxil:
             
             if (i + 1) % 9 == 0:
                 print()
+        return
+
+    def return_puzzle(self, puzzle: list) -> str:
+        ans = ""
+
+        for j in range(9):
+            for k in range(9):
+                ans += str(puzzle[9 * j + k])
+                if k == 2 or k == 5:
+                    ans += "|"
+            ans += "\n"
+            if j == 2 or j == 5:
+                ans += "───┼───┼───\n"
+
+        return ans
+    
+    def parse_puzzle(self, puzzle_lines: list) -> list:
+        parsed_puzzle = []
+        for line in puzzle_lines:
+            line = line.replace("───┼───┼───", "").replace("|", "").replace(" ", "")
+            for char in line:
+                parsed_puzzle.append(int(char))
+        return parsed_puzzle

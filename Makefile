@@ -1,6 +1,6 @@
 # Define variables
 PYTHON := python3
-SCRIPT := sudoku.py
+SCRIPT := src/sudoku.py
 
 # Set the default goal to 'run'
 .DEFAULT_GOAL := run
@@ -8,9 +8,12 @@ SCRIPT := sudoku.py
 # Default target
 .PHONY: run
 run:
-	@$(PYTHON) $(SCRIPT)
+	@$(PYTHON) $(SCRIPT) $(ARGS)
 
 # Usage instructions
 .PHONY: help
 help:
 	@echo "help"
+
+
+ARGS ?= -g 1 17
