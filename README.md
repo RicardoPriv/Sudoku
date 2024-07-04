@@ -17,7 +17,7 @@ To generate Sudoku puzzles with a specified number of initial numbers:
 python3 sudoku.py -g <number_of_initial_numbers> <number_of_puzzles>
 ```
 
-To solve Sudoku puzzles:
+### Solving Sudoku puzzles:
 
 ```sh
 python3 sudoku.py -s
