@@ -9,6 +9,7 @@ class Solver:
     def __init__(self):
         pass
     
+    #Solves a puzzle using the backtracking method
     def backtrack_solver(self, puzzle: list) -> bool:
         validator = SudokuValidator(puzzle)
 
@@ -26,6 +27,7 @@ class Solver:
 
         return solve_recursive()
     
+    #Solve puzzle function to be called
     def solve_puzzle(self, puzzle: list) -> list:
         solved_puzzle = puzzle[:]  # Create a copy of the puzzle
         if self.backtrack_solver(solved_puzzle):
@@ -37,6 +39,8 @@ class Generator:
     def __init__(self):
         self.solver = Solver()
     
+    #Generates a puzzle
+    #Note: potential to infinite loop -> called attempt
     def attempt_gen_puzzle(self, begin_numbers: int) -> list:
         while True:
             puzzle = [0] * 81  # Initialize the puzzle with 81 zeros
@@ -60,7 +64,8 @@ class Generator:
                     if i not in filled_positions:
                         puzzle[i] = 0
                 return puzzle  # Return the solvable puzzle
-            
+
+    #Uses multi-processing to guarantee solve a puzzle 
     def generate_puzzle(self, begin_numbers: int, puzzle_count: int) -> list:
         gen = Generator()
         pool = multiprocessing.Pool()
@@ -82,6 +87,7 @@ class Generator:
                         return solved
     
 class Auxil:
+    #prints puzzle to command line
     def print_puzzle(self, puzzle: list):
         for i in range(81):
             if puzzle[i] == 0:
@@ -93,6 +99,7 @@ class Auxil:
                 print()
         return
 
+    #returns a puzzle in output format
     def return_puzzle(self, puzzle: list) -> str:
         ans = ""
 
@@ -107,6 +114,7 @@ class Auxil:
 
         return ans
     
+    #parses puzzle into program usable
     def parse_puzzle(self, puzzle_lines: list) -> list:
         parsed_puzzle = []
         for line in puzzle_lines:

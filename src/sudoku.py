@@ -5,6 +5,7 @@ from src.puzzle import Solver, Generator, Auxil
 
 filename = "Sudoku"
 
+#Determines the command to execute: solve or generate  puzzle
 def main():
     if sys.argv[1] == "-g":
         generate(int(sys.argv[2]), int(sys.argv[3]))
@@ -16,6 +17,7 @@ def main():
     
     print("Invalid parameters")
 
+#Generates a Sudoku puzzle
 def generate(num_puzzles: int, num_start_blocks: int):
     gen = Generator()
     aux = Auxil()
@@ -27,6 +29,7 @@ def generate(num_puzzles: int, num_start_blocks: int):
     
     save_to_file(ans, 'w')
 
+#Solves a Sudoku puzzle
 def solve():
     solv = Solver()
     aux = Auxil()
@@ -37,6 +40,7 @@ def solve():
 
     save_to_file(ans, 'w')
 
+#Saves a puzzle to a file
 def save_to_file(string: str, save_type: chr):
     try:
         with open(filename, save_type) as file:
@@ -44,6 +48,8 @@ def save_to_file(string: str, save_type: chr):
     except IOError as e:
         print(f"Error saving content to {filename}: {e}")
 
+#Reads a puzzle from a file
+#Note: format dependant
 def read_puzzles_from_file() -> list:
     aux = Auxil()
     puzzles = []
